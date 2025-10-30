@@ -1,13 +1,15 @@
-import PlaceCard from '../../components/place-card/place-card';
 import Header from '../../components/header/header';
 import { AuthorizationStatus } from '../../mocks/mocks';
+import { TypeOffer } from '../../types/offer';
+import ListOffers from '../../components/list-offers/list-offers';
 
 export type PageMainProps = {
   placesNumber: number;
   authStatus: AuthorizationStatus;
+  offers: TypeOffer[];
 }
 
-function PageMain({placesNumber, authStatus}: PageMainProps): JSX.Element {
+function PageMain({placesNumber, authStatus, offers}: PageMainProps): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <Header authStatus={authStatus}/>
@@ -70,13 +72,7 @@ function PageMain({placesNumber, authStatus}: PageMainProps): JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-                <PlaceCard />
-                <PlaceCard />
-                <PlaceCard />
-                <PlaceCard />
-                <PlaceCard />
-              </div>
+              <ListOffers offers={offers} />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map"></section>
