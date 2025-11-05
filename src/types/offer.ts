@@ -1,45 +1,26 @@
-export type Review = {
-  id: string;
-  user: {
+import { Host } from './host';
+import { Review } from './review';
+export type Offer = {
+    id: number;
+    type: 'Room' | 'Apartment';
     name: string;
-    avatarUrl: string;
-    isPro: boolean;
-  };
-  rating: number;
-  comment: string;
-  date: string;
+    description: string[];
+    price: number;
+    currencyCode: string;
+    rating: number;
+    lat: number;
+    lng: number;
+    isBookmarked: boolean;
+    isPremium: boolean;
+    mainImageSource: string;
+    imageSources: string[];
+    timeBasedPricingMode: 'Night' | 'Day';
+    country: string;
+    bedrooms: string;
+    occupancy: string;
+    amenities: string[];
+    host: Host;
+    reviews: Review[];
 };
 
-export type TypeOffer = {
-  id: string;
-  title: string;
-  type: string;
-  price: number;
-  rating: number;
-  isPremium: boolean;
-  isFavorite: boolean;
-  images: string[];
-  description: string;
-  bedrooms: number;
-  maxAdults: number;
-  goods: string[];
-  host: {
-    name: string;
-    avatarUrl: string;
-    isPro: boolean;
-  };
-  city: {
-    name: string;
-    location: {
-      latitude: number;
-      longitude: number;
-      zoom: number;
-    };
-  };
-  location: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
-  };
-  reviews: Review[];
-};
+export type Offers = Offer[];

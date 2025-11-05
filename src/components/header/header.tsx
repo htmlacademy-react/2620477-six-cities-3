@@ -1,13 +1,13 @@
 import {Link} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus} from '../../mocks/mocks';
+import {AppRoute, AuthorizationStatus} from '../../const';
 
 
 type HeaderProps = {
-  authStatus: AuthorizationStatus;
+  authorizationStatus: AuthorizationStatus;
 }
 
-function Header({authStatus}: HeaderProps) {
-  const userLogged = authStatus === AuthorizationStatus.Auth;
+function Header({authorizationStatus}: HeaderProps) {
+  const userLogged = authorizationStatus === AuthorizationStatus.Auth;
 
   return (
     <header className="header">
