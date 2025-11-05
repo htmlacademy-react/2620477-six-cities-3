@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Offer } from '../../types/offer';
-import CurrencySymbolResolver from '../../utils/CurrencySymbolResolver';
-import RatingStarsWidthResolver from '../../utils/RatingStarsWidthResolver';
+import { getCurrencySymbol } from '../../utils/getCurrencySymbol';
+import { getRatingStarsWidth } from '../../utils/getRatingStarsWidth';
 
 type FavoriteOfferCardProps = {
     offer: Offer;
@@ -23,7 +23,7 @@ function FavoriteOfferCard({offer}: FavoriteOfferCardProps): JSX.Element {
       <div className="favorites__card-info place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">{CurrencySymbolResolver.resolve(offer.currencyCode)}{offer.price}</b>
+            <b className="place-card__price-value">{getCurrencySymbol(offer.currencyCode)}{offer.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;{offer.timeBasedPricingMode}</span>
           </div>
           <button className="place-card__bookmark-button place-card__bookmark-button--active button" type="button">
@@ -35,7 +35,7 @@ function FavoriteOfferCard({offer}: FavoriteOfferCardProps): JSX.Element {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: RatingStarsWidthResolver.resolve(offer.rating) }}></span>
+            <span style={{ width: getRatingStarsWidth(offer.rating) }}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

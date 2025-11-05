@@ -22,7 +22,7 @@ function App({offers, placesNumber, authorizationStatus}: AppProps): JSX.Element
         <Routes>
           <Route
             path={AppRoute.Main}
-            element={<Main offers = {offers} authorizationStatus={authorizationStatus} placesNumber={placesNumber}/>}
+            element={<Main offers = {offers} authorizationStatus={authorizationStatus} placesNumber={placesNumber} />}
           />
           <Route
             path={AppRoute.Login}
@@ -40,7 +40,7 @@ function App({offers, placesNumber, authorizationStatus}: AppProps): JSX.Element
           />
           <Route
             path={AppRoute.Offer}
-            element={<Offer authorizationStatus={authorizationStatus} />}
+            element={<Offer offers={offers} authorizationStatus={authorizationStatus} />}
           />
           <Route
             path="*"

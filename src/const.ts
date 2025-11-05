@@ -22,3 +22,12 @@ export const CITY: City = {
 export const Settings = {
   placesNumber: 4,
 } as const;
+
+export const ReviewLength = {
+  MIN: 50,
+  MAX: 300
+};
+
+export const CURRENCY_SYMBOLS = {
+  euro: '€',
+} as const;

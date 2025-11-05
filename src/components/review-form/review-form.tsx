@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
+import { ReviewLength } from '../../const';
 
 function ReviewForm(): JSX.Element {
-  const minReviewLength = 50;
   const [reviewFormData, setReviewFormData] = useState({
     rating: 0,
     review: ''
@@ -53,9 +53,9 @@ function ReviewForm(): JSX.Element {
       <textarea className="reviews__textarea form__textarea" id="review" name="review" value={reviewFormData.review} placeholder="Tell how was your stay, what you like and what can be improved" onChange={reviewFormFieldChangeHandle} />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
-          To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">{minReviewLength} characters</b>.
+          To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">{ReviewLength.MIN} characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={reviewFormData.review.length < minReviewLength}>Submit</button>
+        <button className="reviews__submit form__submit button" type="submit" disabled={reviewFormData.review.length < ReviewLength.MIN || reviewFormData.review.length > ReviewLength.MAX}>Submit</button>
       </div>
     </form>
   );
