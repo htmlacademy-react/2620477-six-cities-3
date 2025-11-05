@@ -1,18 +1,29 @@
+import { Link } from 'react-router-dom';
+import OffersList from '../../components/offers-list/offers-list';
+import { Offers } from '../../types/offer';
+import Map from '../../components/map/map';
+import { Point } from '../../types/point';
+import { useState } from 'react';
+import { CITY, AuthorizationStatus } from '../../const';
 import Header from '../../components/header/header';
-import { AuthorizationStatus } from '../../mocks/mocks';
-import { TypeOffer } from '../../types/offer';
-import ListOffers from '../../components/list-offers/list-offers';
+import { convertToPoints } from '../../utils/convertToPoints';
 
-export type PageMainProps = {
-  placesNumber: number;
-  authStatus: AuthorizationStatus;
-  offers: TypeOffer[];
+type MainProps = {
+    offers: Offers;
+    authorizationStatus: AuthorizationStatus;
+    placesNumber: number;
 }
 
-function PageMain({placesNumber, authStatus, offers}: PageMainProps): JSX.Element {
+function Main({offers, authorizationStatus, placesNumber}: MainProps): JSX.Element {
+  const [activeOfferId, setActiveOfferId] = useState<number | undefined>(undefined);
+  const onActiveChange = (offerId: number | undefined) => {
+    setActiveOfferId(offerId);
+  };
+  const points: Point[] = convertToPoints(offers);
+
   return (
     <div className="page page--gray page--main">
-      <Header authStatus={authStatus}/>
+      <Header authorizationStatus={authorizationStatus}/>
 
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
@@ -20,34 +31,34 @@ function PageMain({placesNumber, authStatus, offers}: PageMainProps): JSX.Elemen
           <section className="locations container">
             <ul className="locations__list tabs__list">
               <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
+                <Link className="locations__item-link tabs__item" to="#">
                   <span>Paris</span>
-                </a>
+                </Link>
               </li>
               <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
+                <Link className="locations__item-link tabs__item" to="#">
                   <span>Cologne</span>
-                </a>
+                </Link>
               </li>
               <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
+                <Link className="locations__item-link tabs__item" to="#">
                   <span>Brussels</span>
-                </a>
+                </Link>
               </li>
               <li className="locations__item">
-                <a className="locations__item-link tabs__item tabs__item--active">
+                <Link className="locations__item-link tabs__item tabs__item--active" to="#">
                   <span>Amsterdam</span>
-                </a>
+                </Link>
               </li>
               <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
+                <Link className="locations__item-link tabs__item" to="#">
                   <span>Hamburg</span>
-                </a>
+                </Link>
               </li>
               <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
+                <Link className="locations__item-link tabs__item" to="#">
                   <span>Dusseldorf</span>
-                </a>
+                </Link>
               </li>
             </ul>
           </section>
@@ -72,10 +83,10 @@ function PageMain({placesNumber, authStatus, offers}: PageMainProps): JSX.Elemen
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <ListOffers offers={offers} />
+              <OffersList offers={offers} onActiveChange={onActiveChange}/>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <Map city={CITY} points={points} selectedPointId={activeOfferId} />
             </div>
           </div>
         </div>
@@ -84,4 +95,4 @@ function PageMain({placesNumber, authStatus, offers}: PageMainProps): JSX.Elemen
   );
 }
 
-export default PageMain;
+export default Main;

@@ -1,5 +1,5 @@
 import { Link} from 'react-router-dom';
-import { AppRoute } from '../../mocks/mocks';
+import { AppRoute } from '../../const';
 
 const Footer = () => (
   <footer className="footer container">

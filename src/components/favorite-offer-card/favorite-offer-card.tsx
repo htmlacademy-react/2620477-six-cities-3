@@ -3,40 +3,30 @@ import { Offer } from '../../types/offer';
 import CurrencySymbolResolver from '../../utils/CurrencySymbolResolver';
 import RatingStarsWidthResolver from '../../utils/RatingStarsWidthResolver';
 
-type PlaceCardProps = {
+type FavoriteOfferCardProps = {
     offer: Offer;
-    onSetActive: (activeOfferId: number) => void;
-    onResetActive: () => void;
 }
 
-function PlaceCard({offer, onSetActive, onResetActive}: PlaceCardProps): JSX.Element {
+function FavoriteOfferCard({offer}: FavoriteOfferCardProps): JSX.Element {
   return (
-    <article
-      className="cities__card place-card"
-      onMouseEnter={() => {
-        onSetActive(offer.id);
-      }}
-      onMouseLeave={() => {
-        onResetActive();
-      }}
-    >
+    <article className="favorites__card place-card">
       {offer.isPremium && (
         <div className="place-card__mark">
           <span>Premium</span>
         </div>
       )}
-      <div className="cities__image-wrapper place-card__image-wrapper">
+      <div className="favorites__image-wrapper place-card__image-wrapper">
         <Link to={`/offer/${offer.id}`}>
-          <img className="place-card__image" src={offer.mainImageSource} width="260" height="200" alt="Place image" />
+          <img className="place-card__image" src={offer.mainImageSource} width="150" height="110" alt="Place image" />
         </Link>
       </div>
-      <div className="place-card__info">
+      <div className="favorites__card-info place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">{CurrencySymbolResolver.resolve(offer.currencyCode)}{offer.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;{offer.timeBasedPricingMode}</span>
           </div>
-          <button className={`place-card__bookmark-button button${offer.isBookmarked ? ' place-card__bookmark-button--active' : ''}`} type="button">
+          <button className="place-card__bookmark-button place-card__bookmark-button--active button" type="button">
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>
@@ -60,4 +50,4 @@ function PlaceCard({offer, onSetActive, onResetActive}: PlaceCardProps): JSX.Ele
   );
 }
 
-export default PlaceCard;
+export default FavoriteOfferCard;

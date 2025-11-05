@@ -1,66 +1,54 @@
+import { Helmet } from 'react-helmet-async';
+import ReviewForm from '../../components/review-form/review-form';
+import { Link } from 'react-router-dom';
+import { AuthorizationStatus } from '../../const';
 import Header from '../../components/header/header';
-import { AuthorizationStatus } from '../../mocks/mocks';
-import { useParams, Navigate } from 'react-router-dom';
-import { useState } from 'react';
-import { TypeOffer } from '../../types/offer';
-import ReviewForm from '../../components/reviews-form/reviews-form';
 
-type PageOfferProps = {
-  authStatus: AuthorizationStatus;
-  offers: TypeOffer[];
+type OfferProps = {
+    authorizationStatus: AuthorizationStatus;
 }
 
-export const getMonthName = (dateString: string): string =>
-  new Date(dateString).toLocaleString('en-US', { month: 'long' });
-
-function PageOffer({ authStatus, offers }: PageOfferProps): JSX.Element {
-  const userLogged = authStatus === AuthorizationStatus.Auth;
-
-  const [review, setReview] = useState({
-    rating: 0,
-    comment: '',
-  });
-  const { id } = useParams<{ id: string }>();
-  const offer = offers.find((o) => o.id === id);
-  if (!offer) {
-    return <Navigate to="*" replace />;
-  }
-
+function Offer({authorizationStatus}: OfferProps): JSX.Element {
   return (
     <div className="page">
-      <Header authStatus={authStatus}/>
+      <Helmet>
+        <title>6 cities: offer</title>
+      </Helmet>
+      <Header authorizationStatus={authorizationStatus} />
 
       <main className="page__main page__main--offer">
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
               <div className="offer__image-wrapper">
-                {
-                  offer.images.map((img) =>
-                    (
-                      <img
-                        key={img}
-                        className="offer__image"
-                        src={img}
-                        alt="Photo studio"
-                      />
-                    )
-                  )
-                }
+                <img className="offer__image" src="img/room.jpg" alt="Photo studio" />
+              </div>
+              <div className="offer__image-wrapper">
+                <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio" />
+              </div>
+              <div className="offer__image-wrapper">
+                <img className="offer__image" src="img/apartment-02.jpg" alt="Photo studio" />
+              </div>
+              <div className="offer__image-wrapper">
+                <img className="offer__image" src="img/apartment-03.jpg" alt="Photo studio" />
+              </div>
+              <div className="offer__image-wrapper">
+                <img className="offer__image" src="img/studio-01.jpg" alt="Photo studio" />
+              </div>
+              <div className="offer__image-wrapper">
+                <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio" />
               </div>
             </div>
           </div>
           <div className="offer__container container">
             <div className="offer__wrapper">
-              {offer.isPremium ? (
-                <div className="place-card__mark">
-                  <span>Premium</span>
-                </div>
-              ) : (
-                ''
-              )}
+              <div className="offer__mark">
+                <span>Premium</span>
+              </div>
               <div className="offer__name-wrapper">
-                <h1 className="offer__name">{offer.title}</h1>
+                <h1 className="offer__name">
+                  Beautiful &amp; luxurious studio at great location
+                </h1>
                 <button className="offer__bookmark-button button" type="button">
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
@@ -70,43 +58,66 @@ function PageOffer({ authStatus, offers }: PageOfferProps): JSX.Element {
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{width: `${(offer.rating * 100) / 5} %`}}></span>
+                  <span style={{ width: '80%' }}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
-                <span className="offer__rating-value rating__value">{offer.rating}</span>
+                <span className="offer__rating-value rating__value">4.8</span>
               </div>
               <ul className="offer__features">
                 <li className="offer__feature offer__feature--entire">
-                  {offer.type.charAt(0).toUpperCase() + offer.type.slice(1)}
+                  Apartment
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  {offer.bedrooms} Bedrooms
+                  3 Bedrooms
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                  Max {offer.maxAdults} adults
+                  Max 4 adults
                 </li>
               </ul>
               <div className="offer__price">
-                <b className="offer__price-value">&euro;{offer.price}</b>
+                <b className="offer__price-value">&euro;120</b>
                 <span className="offer__price-text">&nbsp;night</span>
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
                 <ul className="offer__inside-list">
-                  {
-                    offer.goods.map((good) => (
-                      <li className="offer__inside-item" key={good}>
-                        {good}
-                      </li>
-                    ))
-                  }
+                  <li className="offer__inside-item">
+                    Wi-Fi
+                  </li>
+                  <li className="offer__inside-item">
+                    Washing machine
+                  </li>
+                  <li className="offer__inside-item">
+                    Towels
+                  </li>
+                  <li className="offer__inside-item">
+                    Heating
+                  </li>
+                  <li className="offer__inside-item">
+                    Coffee machine
+                  </li>
+                  <li className="offer__inside-item">
+                    Baby seat
+                  </li>
+                  <li className="offer__inside-item">
+                    Kitchen
+                  </li>
+                  <li className="offer__inside-item">
+                    Dishwasher
+                  </li>
+                  <li className="offer__inside-item">
+                    Cabel TV
+                  </li>
+                  <li className="offer__inside-item">
+                    Fridge
+                  </li>
                 </ul>
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
                   <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
-                    <img className="offer__avatar user__avatar" src="img/avatar-angelina.jpg" width="74" height="74" alt="Host avatar"/>
+                    <img className="offer__avatar user__avatar" src="img/avatar-angelina.jpg" width="74" height="74" alt="Host avatar" />
                   </div>
                   <span className="offer__user-name">
                     Angelina
@@ -125,49 +136,32 @@ function PageOffer({ authStatus, offers }: PageOfferProps): JSX.Element {
                 </div>
               </div>
               <section className="offer__reviews reviews">
-                <h2 className="reviews__title">Reviews &middot;{' '}
-                  <span className="reviews__amount">{offer?.reviews.length}</span>
-                </h2>
+                <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">1</span></h2>
                 <ul className="reviews__list">
-                  {
-                    offer.reviews.map((item) => (
-                      <li className="reviews__item" key={item.id}>
-                        <div className="reviews__user user">
-                          <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                            <img
-                              className="reviews__avatar user__avatar"
-                              src={item.user.avatarUrl}
-                              width="54"
-                              height="54"
-                              alt="Reviews avatar"
-                            />
-                          </div>
-                          <span className="reviews__user-name">
-                            {item.user.name}
-                          </span>
+                  <li className="reviews__item">
+                    <div className="reviews__user user">
+                      <div className="reviews__avatar-wrapper user__avatar-wrapper">
+                        <img className="reviews__avatar user__avatar" src="img/avatar-max.jpg" width="54" height="54" alt="Reviews avatar" />
+                      </div>
+                      <span className="reviews__user-name">
+                        Max
+                      </span>
+                    </div>
+                    <div className="reviews__info">
+                      <div className="reviews__rating rating">
+                        <div className="reviews__stars rating__stars">
+                          <span style={{ width: '80%' }}></span>
+                          <span className="visually-hidden">Rating</span>
                         </div>
-                        <div className="reviews__info">
-                          <div className="reviews__rating rating">
-                            <div className="reviews__stars rating__stars">
-                              <span style={{ width: `${(item.rating * 100 / 5)} %` }}></span>
-                              <span className="visually-hidden">Rating</span>
-                            </div>
-                          </div>
-                          <p className="reviews__text">{item.comment}</p>
-                          <time className="reviews__time" dateTime={item.date}>
-                            {getMonthName(item.date)}{' '}
-                            {new Date(item.date).getFullYear()}
-                          </time>
-                        </div>
-                      </li>
-                    ))
-                  }
+                      </div>
+                      <p className="reviews__text">
+                        A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
+                      </p>
+                      <time className="reviews__time" dateTime="2019-04-24">April 2019</time>
+                    </div>
+                  </li>
                 </ul>
-                {userLogged &&
-                  <ReviewForm
-                    onReview={setReview}
-                    review={review}
-                  />}
+                <ReviewForm />
               </section>
             </div>
           </div>
@@ -179,9 +173,9 @@ function PageOffer({ authStatus, offers }: PageOfferProps): JSX.Element {
             <div className="near-places__list places__list">
               <article className="near-places__card place-card">
                 <div className="near-places__image-wrapper place-card__image-wrapper">
-                  <a href="#">
-                    <img className="place-card__image" src="img/room.jpg" width="260" height="200" alt="Place image"/>
-                  </a>
+                  <Link to="#">
+                    <img className="place-card__image" src="img/room.jpg" width="260" height="200" alt="Place image" />
+                  </Link>
                 </div>
                 <div className="place-card__info">
                   <div className="place-card__price-wrapper">
@@ -198,12 +192,12 @@ function PageOffer({ authStatus, offers }: PageOfferProps): JSX.Element {
                   </div>
                   <div className="place-card__rating rating">
                     <div className="place-card__stars rating__stars">
-                      <span style={{width: '80%'}}></span>
+                      <span style={{ width: '80%' }}></span>
                       <span className="visually-hidden">Rating</span>
                     </div>
                   </div>
                   <h2 className="place-card__name">
-                    <a href="#">Wood and stone place</a>
+                    <Link to="#">Wood and stone place</Link>
                   </h2>
                   <p className="place-card__type">Room</p>
                 </div>
@@ -211,9 +205,9 @@ function PageOffer({ authStatus, offers }: PageOfferProps): JSX.Element {
 
               <article className="near-places__card place-card">
                 <div className="near-places__image-wrapper place-card__image-wrapper">
-                  <a href="#">
-                    <img className="place-card__image" src="img/apartment-02.jpg" width="260" height="200" alt="Place image"/>
-                  </a>
+                  <Link to="#">
+                    <img className="place-card__image" src="img/apartment-02.jpg" width="260" height="200" alt="Place image" />
+                  </Link>
                 </div>
                 <div className="place-card__info">
                   <div className="place-card__price-wrapper">
@@ -230,12 +224,12 @@ function PageOffer({ authStatus, offers }: PageOfferProps): JSX.Element {
                   </div>
                   <div className="place-card__rating rating">
                     <div className="place-card__stars rating__stars">
-                      <span style={{width: '80%'}}></span>
+                      <span style={{ width: '80%' }}></span>
                       <span className="visually-hidden">Rating</span>
                     </div>
                   </div>
                   <h2 className="place-card__name">
-                    <a href="#">Canal View Prinsengracht</a>
+                    <Link to="#">Canal View Prinsengracht</Link>
                   </h2>
                   <p className="place-card__type">Apartment</p>
                 </div>
@@ -246,9 +240,9 @@ function PageOffer({ authStatus, offers }: PageOfferProps): JSX.Element {
                   <span>Premium</span>
                 </div>
                 <div className="near-places__image-wrapper place-card__image-wrapper">
-                  <a href="#">
-                    <img className="place-card__image" src="img/apartment-03.jpg" width="260" height="200" alt="Place image"/>
-                  </a>
+                  <Link to="#">
+                    <img className="place-card__image" src="img/apartment-03.jpg" width="260" height="200" alt="Place image" />
+                  </Link>
                 </div>
                 <div className="place-card__info">
                   <div className="place-card__price-wrapper">
@@ -265,12 +259,12 @@ function PageOffer({ authStatus, offers }: PageOfferProps): JSX.Element {
                   </div>
                   <div className="place-card__rating rating">
                     <div className="place-card__stars rating__stars">
-                      <span style={{width: '100%'}}></span>
+                      <span style={{ width: '100%' }}></span>
                       <span className="visually-hidden">Rating</span>
                     </div>
                   </div>
                   <h2 className="place-card__name">
-                    <a href="#">Nice, cozy, warm big bed apartment</a>
+                    <Link to="#">Nice, cozy, warm big bed apartment</Link>
                   </h2>
                   <p className="place-card__type">Apartment</p>
                 </div>
@@ -283,4 +277,4 @@ function PageOffer({ authStatus, offers }: PageOfferProps): JSX.Element {
   );
 }
 
-export default PageOffer;
+export default Offer;
