@@ -8,21 +8,26 @@ import Offer from '../../pages/offer/offer';
 import PrivateRoute from '../private-route/private-route';
 import {HelmetProvider} from 'react-helmet-async';
 import { Offers } from '../../types/offer';
+import { City } from '../../types/city';
+import { useAppDispatch } from '../../hooks';
+import { setOffers } from '../../store/action';
 
 type AppProps = {
   offers: Offers;
-  placesNumber: number;
   authorizationStatus: AuthorizationStatus;
+  cities: City[];
 }
 
-function App({offers, placesNumber, authorizationStatus}: AppProps): JSX.Element {
+function App({offers, cities, authorizationStatus}: AppProps): JSX.Element {
+  useAppDispatch()(setOffers(offers));
+
   return (
     <HelmetProvider>
       <BrowserRouter>
         <Routes>
           <Route
             path={AppRoute.Main}
-            element={<Main offers = {offers} authorizationStatus={authorizationStatus} placesNumber={placesNumber} />}
+            element={<Main cities={cities} authorizationStatus={authorizationStatus} />}
           />
           <Route
             path={AppRoute.Login}

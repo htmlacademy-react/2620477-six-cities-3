@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Offers } from '../../types/offer';
-import FavoriteOfferCard from '../favorite-offer-card/favorite-offer-card';
+import PlaceCard from '../place-card/place-card';
 
 type FavoritesListProps = {
     offers: Offers;
@@ -19,7 +19,7 @@ function FavoritesList({offers}: FavoritesListProps): JSX.Element {
 
   return (
     <ul className="favorites__list">
-      {Object.entries(groupByCountry(offers)).map(([country, offersGrupedByCountry]) => (
+      {Object.entries(groupByCountry(offers)).map(([country, offersGrouppedByCountry]) => (
         <li className="favorites__locations-items" key={country}>
           <div className="favorites__locations locations locations--current">
             <div className="locations__item">
@@ -29,7 +29,7 @@ function FavoritesList({offers}: FavoritesListProps): JSX.Element {
             </div>
           </div>
           <div className="favorites__places">
-            {offersGrupedByCountry.map((offer) => <FavoriteOfferCard offer={offer} key={offer.id} />)}
+            {offersGrouppedByCountry.map((offer) => <PlaceCard offer={offer} variant="favorite" key={offer.id} />)}
           </div>
         </li>
       ))}

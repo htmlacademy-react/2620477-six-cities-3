@@ -14,9 +14,10 @@ export enum AuthorizationStatus {
 }
 
 export const CITY: City = {
+  id: 4,
+  name: 'Amsterdam',
   lat: 52.374,
   lng: 4.88969,
-  zoom: 12
 };
 
 export const Settings = {
@@ -31,3 +32,5 @@ export const ReviewLength = {
 export const CURRENCY_SYMBOLS = {
   euro: '€',
 } as const;
+
+export const zoom = 12;

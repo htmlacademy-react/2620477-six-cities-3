@@ -10,12 +10,12 @@ function OffersList({offers, onActiveChange}: OffersListProps): JSX.Element {
   return (
     <div
       className="cities__places-list places__list tabs__content"
-      style={{justifyContent: 'center'}}
     >
       {offers.map((offer) => (
         <PlaceCard
           offer={offer}
           key={offer.id}
+          variant="main"
           onSetActive={() => onActiveChange(offer.id)}
           onResetActive={() => onActiveChange(undefined)}
         />
