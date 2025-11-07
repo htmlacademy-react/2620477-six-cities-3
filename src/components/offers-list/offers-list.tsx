@@ -15,7 +15,7 @@ function OffersList({offers, onActiveChange}: OffersListProps): JSX.Element {
         <PlaceCard
           offer={offer}
           key={offer.id}
-          variant="main"
+          variant="horizontal"
           onSetActive={() => onActiveChange(offer.id)}
           onResetActive={() => onActiveChange(undefined)}
         />

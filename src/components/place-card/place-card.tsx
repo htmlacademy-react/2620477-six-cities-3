@@ -3,29 +3,41 @@ import { Offer } from '../../types/offer';
 import { getCurrencySymbol } from '../../utils/getCurrencySymbol';
 import { getRatingStarsWidth } from '../../utils/getRatingStarsWidth';
 
-type PlaceCardVariant = 'main' | 'favorite';
+type PlaceCardVariant = 'horizontal' | 'vertical';
 
 type PlaceCardProps = {
-    offer: Offer;
-    variant?: PlaceCardVariant;
-    onSetActive?: (activeOfferId: number) => void;
-    onResetActive?: () => void;
-}
+  offer: Offer;
+  variant?: PlaceCardVariant;
+  onSetActive?: (activeOfferId: number) => void;
+  onResetActive?: () => void;
+};
 
-function PlaceCard({offer, variant = 'main', onSetActive, onResetActive}: PlaceCardProps): JSX.Element {
-  const isMain = variant === 'main';
-  const isFavorite = variant === 'favorite';
+const CARD_SETTINGS = {
+  horizontal: {
+    imageWidth: 260,
+    imageHeight: 200,
+    containerClass: 'cities__card place-card',
+    imageWrapperClass: 'cities__image-wrapper place-card__image-wrapper',
+    infoClass: 'place-card__info',
+    bookmarkInteractive: true,
+  },
+  vertical: {
+    imageWidth: 150,
+    imageHeight: 110,
+    containerClass: 'favorites__card place-card',
+    imageWrapperClass: 'favorites__image-wrapper place-card__image-wrapper',
+    infoClass: 'favorites__card-info place-card__info',
+    bookmarkInteractive: false,
+  },
+} as const;
 
-  const imageWidth = isMain ? 260 : 150;
-  const imageHeight = isMain ? 200 : 110;
-
-  const imageWrapperClass = isMain
-    ? 'cities__image-wrapper place-card__image-wrapper'
-    : 'favorites__image-wrapper place-card__image-wrapper';
-
-  const infoClass = isMain
-    ? 'place-card__info'
-    : 'favorites__card-info place-card__info';
+function PlaceCard({
+  offer,
+  variant = 'horizontal',
+  onSetActive,
+  onResetActive,
+}: PlaceCardProps): JSX.Element {
+  const settings = CARD_SETTINGS[variant];
 
   const bookmarkClass = `place-card__bookmark-button button${
     offer.isBookmarked ? ' place-card__bookmark-button--active' : ''
@@ -33,7 +45,7 @@ function PlaceCard({offer, variant = 'main', onSetActive, onResetActive}: PlaceC
 
   return (
     <article
-      className={isMain ? 'cities__card place-card' : 'favorites__card place-card'}
+      className={settings.containerClass}
       onMouseEnter={() => onSetActive?.(offer.id)}
       onMouseLeave={() => onResetActive?.()}
     >
@@ -43,29 +55,33 @@ function PlaceCard({offer, variant = 'main', onSetActive, onResetActive}: PlaceC
         </div>
       )}
 
-      <div className={imageWrapperClass}>
+      <div className={settings.imageWrapperClass}>
         <Link to={`/offer/${offer.id}`}>
           <img
             className="place-card__image"
             src={offer.mainImageSource}
-            width={imageWidth}
-            height={imageHeight}
+            width={settings.imageWidth}
+            height={settings.imageHeight}
             alt="Place image"
           />
         </Link>
       </div>
 
-      <div className={infoClass}>
+      <div className={settings.infoClass}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">
               {getCurrencySymbol(offer.currencyCode)}{offer.price}
             </b>
             <span className="place-card__price-text">
-              &#47;&nbsp;{offer.timeBasedPricingMode}
+              / {offer.timeBasedPricingMode}
             </span>
           </div>
-          <button className={bookmarkClass} type="button" disabled={isFavorite}>
+          <button
+            className={bookmarkClass}
+            type="button"
+            disabled={!settings.bookmarkInteractive}
+          >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>

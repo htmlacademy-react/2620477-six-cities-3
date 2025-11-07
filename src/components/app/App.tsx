@@ -19,7 +19,9 @@ type AppProps = {
 }
 
 function App({offers, cities, authorizationStatus}: AppProps): JSX.Element {
-  useAppDispatch()(setOffers(offers));
+  const dispatch = useAppDispatch();
+
+  dispatch(setOffers(offers));
 
   return (
     <HelmetProvider>

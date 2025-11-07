@@ -34,3 +34,10 @@ export const CURRENCY_SYMBOLS = {
 } as const;
 
 export const zoom = 12;
+
+export enum SortType {
+  Popular,
+  PriceLowToHigh,
+  PriceHighToLow,
+  TopRated,
+}
