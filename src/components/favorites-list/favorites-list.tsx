@@ -29,7 +29,7 @@ function FavoritesList({offers}: FavoritesListProps): JSX.Element {
             </div>
           </div>
           <div className="favorites__places">
-            {offersGrouppedByCountry.map((offer) => <PlaceCard offer={offer} variant="favorite" key={offer.id} />)}
+            {offersGrouppedByCountry.map((offer) => <PlaceCard offer={offer} variant="vertical" key={offer.id} />)}
           </div>
         </li>
       ))}
