@@ -9,7 +9,7 @@ type FavoritesListProps = {
 function FavoritesList({offers}: FavoritesListProps): JSX.Element {
   const groupByCountry = (offersToGroup: Offers): Record<string, Offers> =>
     offersToGroup.reduce((acc, offer) => {
-      const country = offer.country;
+      const country = offer.city.name;
       if (!acc[country]) {
         acc[country] = [];
       }
@@ -19,7 +19,7 @@ function FavoritesList({offers}: FavoritesListProps): JSX.Element {
 
   return (
     <ul className="favorites__list">
-      {Object.entries(groupByCountry(offers)).map(([country, offersGrouppedByCountry]) => (
+      {Object.entries(groupByCountry(offers)).map(([country, offersGroupedByCountry]) => (
         <li className="favorites__locations-items" key={country}>
           <div className="favorites__locations locations locations--current">
             <div className="locations__item">
@@ -29,7 +29,7 @@ function FavoritesList({offers}: FavoritesListProps): JSX.Element {
             </div>
           </div>
           <div className="favorites__places">
-            {offersGrouppedByCountry.map((offer) => <PlaceCard offer={offer} variant="vertical" key={offer.id} />)}
+            {offersGroupedByCountry.map((offer) => <PlaceCard offer={offer} variant="vertical" key={offer.id} />)}
           </div>
         </li>
       ))}

@@ -1,31 +1,54 @@
-import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import ReviewForm from '../../components/review-form/review-form';
-import Header from '../../components/header/header';
+import { useNavigate } from 'react-router-dom';
 import ReviewsList from '../../components/reviews-list/reviews-list';
 import { useParams } from 'react-router-dom';
-import { Offer as OfferType } from '../../types/offer';
-import { Review } from '../../types/review';
-import { CITY, AuthorizationStatus } from '../../const';
 import { convertToPoints } from '../../utils/convertToPoints';
 import Map from '../../components/map/map';
 import { Point } from '../../types/point';
 import OffersList from '../../components/offers-list/offers-list';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { fetchCommentsAction, fetchOfferAction, fetchOffersNearbyAction } from '../../store/api-actions';
+import { AppRoute, AuthorizationStatus } from '../../const';
+import { setResourceNotFound } from '../../store/action';
+import LoadingScreen from '../../components/loading-screen/loading-screen';
+import Header from '../../components/header/header';
 
-
-type OfferProps = {
-    offers: OfferType[];
-    authorizationStatus: AuthorizationStatus;
-}
-
-function Offer({offers, authorizationStatus}: OfferProps): JSX.Element {
+function Offer(): JSX.Element | null {
   const { id } = useParams();
-  const reviews: Review[] | undefined = offers.find((offer) => offer.id === Number(id))?.reviews;
-  const nearestOffers: OfferType[] = offers.filter((offer) => offer.id !== Number(id));
-  const points: Point[] = convertToPoints(nearestOffers);
-  const [activeOfferId, setActiveOfferId] = useState<number | undefined>(undefined);
-  const onActiveChange = (offerId: number | undefined) => {
-    setActiveOfferId(offerId);
+  const dispatch = useAppDispatch();
+  const allOffersDetailed = useAppSelector((state) => state.offersDetailed);
+  const offerDetailed = allOffersDetailed.find((offer) => offer.id === id);
+  const isResourceNotFound = useAppSelector((state) => state.isResourceNotFound);
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isResourceNotFound) {
+      navigate(AppRoute.NotFound);
+      dispatch(setResourceNotFound(false));
+    }
+  }, [isResourceNotFound, navigate, dispatch]);
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchOfferAction(id));
+      dispatch(fetchOffersNearbyAction(id));
+      dispatch(fetchCommentsAction(id));
+    }
+  }, [dispatch, id]);
+  const offersNearby = useAppSelector((state) =>
+    state.offersNearby[id ?? ''] ?? []
+  );
+  const comments = useAppSelector((state) =>
+    state.comments[id ?? ''] ?? []
+  );
+  const points: Point[] = convertToPoints(offersNearby);
+  const [activeOfferId, setActiveOfferId] = useState<string | undefined>(undefined);
+  if (id === undefined || !offerDetailed) {
+    return <LoadingScreen />;
+  }
+  const onActiveChange = (newActiveOfferId: string | undefined) => {
+    setActiveOfferId(newActiveOfferId);
   };
 
   return (
@@ -33,7 +56,8 @@ function Offer({offers, authorizationStatus}: OfferProps): JSX.Element {
       <Helmet>
         <title>6 cities: offer</title>
       </Helmet>
-      <Header authorizationStatus={authorizationStatus} />
+
+      <Header />
 
       <main className="page__main page__main--offer">
         <section className="offer">
@@ -155,20 +179,20 @@ function Offer({offers, authorizationStatus}: OfferProps): JSX.Element {
                 </div>
               </div>
               <section className="offer__reviews reviews">
-                {reviews && (<h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews.length}</span></h2>)}
-                {reviews && (<ReviewsList reviews={reviews} />)}
-                <ReviewForm />
+                {comments.length > 0 && (<h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{comments.length}</span></h2>)}
+                {comments.length > 0 && (<ReviewsList comments={comments} />)}
+                {authorizationStatus === AuthorizationStatus.Auth && <ReviewForm offerId={id} />}
               </section>
             </div>
           </div>
           <div className="container" style={{ height: '575px', padding: '0', marginBottom: '50px' }}>
-            <Map city={CITY} points={points} selectedPointId={activeOfferId} />
+            <Map city={offerDetailed.city} points={points} selectedPointId={activeOfferId} />
           </div>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <OffersList offers={nearestOffers} onActiveChange={onActiveChange}/>
+            <OffersList offers={offersNearby} onActiveChange={onActiveChange}/>
           </section>
         </div>
       </main>

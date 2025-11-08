@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { Offer } from '../../types/offer';
-import { getCurrencySymbol } from '../../utils/getCurrencySymbol';
 import { getRatingStarsWidth } from '../../utils/getRatingStarsWidth';
 
 type PlaceCardVariant = 'horizontal' | 'vertical';
@@ -8,7 +7,7 @@ type PlaceCardVariant = 'horizontal' | 'vertical';
 type PlaceCardProps = {
   offer: Offer;
   variant?: PlaceCardVariant;
-  onSetActive?: (activeOfferId: number) => void;
+  onSetActive?: (activeOfferId: string) => void;
   onResetActive?: () => void;
 };
 
@@ -40,7 +39,7 @@ function PlaceCard({
   const settings = CARD_SETTINGS[variant];
 
   const bookmarkClass = `place-card__bookmark-button button${
-    offer.isBookmarked ? ' place-card__bookmark-button--active' : ''
+    offer.isFavorite ? ' place-card__bookmark-button--active' : ''
   }`;
 
   return (
@@ -59,7 +58,7 @@ function PlaceCard({
         <Link to={`/offer/${offer.id}`}>
           <img
             className="place-card__image"
-            src={offer.mainImageSource}
+            src={offer.previewImage}
             width={settings.imageWidth}
             height={settings.imageHeight}
             alt="Place image"
@@ -70,12 +69,8 @@ function PlaceCard({
       <div className={settings.infoClass}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">
-              {getCurrencySymbol(offer.currencyCode)}{offer.price}
-            </b>
-            <span className="place-card__price-text">
-              / {offer.timeBasedPricingMode}
-            </span>
+            <b className="place-card__price-value">€{offer.price}</b>
+            <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button
             className={bookmarkClass}
@@ -97,7 +92,7 @@ function PlaceCard({
         </div>
 
         <h2 className="place-card__name">
-          <Link to={`/offer/${offer.id}`}>{offer.name}</Link>
+          <Link to={`/offer/${offer.id}`}>{offer.title}</Link>
         </h2>
         <p className="place-card__type">{offer.type}</p>
       </div>
