@@ -1,16 +1,25 @@
 import { Comment } from '../../types/comment';
 import Review from '../review/review';
+import { memo } from 'react';
 
 type ReviewsListProps = {
-    comments: Comment[];
-}
+  comments: Comment[];
+};
 
-function ReviewsList({comments}: ReviewsListProps): JSX.Element {
+function ReviewsList({ comments }: ReviewsListProps): JSX.Element {
+  const sorted = [...comments]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 10);
+
   return (
     <ul className="reviews__list">
-      {comments.map((comment) => (<Review comment={comment} key={comment.id}/>))}
+      {sorted.map((comment) => (
+        <Review key={comment.id} comment={comment} />
+      ))}
     </ul>
   );
 }
 
-export default ReviewsList;
+const MemoizedReviewsList = memo(ReviewsList);
+
+export default MemoizedReviewsList;

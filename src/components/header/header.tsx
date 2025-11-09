@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { logoutAction } from '../../store/api-actions';
 import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getAuthState } from '../../store/user-process/selectors';
+import { getFavorites } from '../../store/offers-data/selectors';
 
 export default function Header(): JSX.Element {
   const dispatch = useAppDispatch();
-  const authorizationStatus = useAppSelector((s) => s.authorizationStatus);
-  const userData = useAppSelector((s) => s.userData);
-  const favoritesCount = useAppSelector((s) => s.favorites.length);
+  const { authorizationStatus, userData, isAuth } = useAppSelector(getAuthState);
+  const favorites = useAppSelector(getFavorites);
+  const favoritesCount = favorites.length;
 
   const handleLogout = (evt: React.MouseEvent) => {
     evt.preventDefault();
@@ -30,9 +32,6 @@ export default function Header(): JSX.Element {
                 />
               </Link>
             </div>
-            <nav className="header__nav">
-              <span>Loading…</span>
-            </nav>
           </div>
         </div>
       </header>
@@ -57,7 +56,7 @@ export default function Header(): JSX.Element {
 
           <nav className="header__nav">
             <ul className="header__nav-list">
-              {authorizationStatus === AuthorizationStatus.Auth && userData ? (
+              {isAuth && userData ? (
                 <>
                   <li className="header__nav-item user">
                     <Link
@@ -65,12 +64,7 @@ export default function Header(): JSX.Element {
                       to={AppRoute.Favorites}
                     >
                       <div className="header__avatar-wrapper user__avatar-wrapper">
-                        <img
-                          src={userData.avatarUrl}
-                          alt="User avatar"
-                          width="54"
-                          height="54"
-                        />
+                        <img src={userData.avatarUrl} alt="User avatar" />
                       </div>
                       <span className="header__user-name user__name">
                         {userData.email}
@@ -82,15 +76,19 @@ export default function Header(): JSX.Element {
                   </li>
 
                   <li className="header__nav-item">
-                    <button className="header__nav-link" onClick={handleLogout}>
+                    <a className="header__nav-link" href="#" onClick={handleLogout}>
                       <span className="header__signout">Sign out</span>
-                    </button>
+                    </a>
                   </li>
                 </>
               ) : (
-                <li className="header__nav-item">
-                  <Link className="header__nav-link" to={AppRoute.Login}>
-                    <span className="header__signout">Sign in</span>
+                <li className="header__nav-item user">
+                  <Link
+                    className="header__nav-link header__nav-link--profile"
+                    to={AppRoute.Login}
+                  >
+                    <div className="header__avatar-wrapper user__avatar-wrapper" />
+                    <span className="header__login">Sign in</span>
                   </Link>
                 </li>
               )}

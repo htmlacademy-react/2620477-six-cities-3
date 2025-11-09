@@ -103,3 +103,17 @@ export enum APIRoute {
   Login = '/login',
   Logout = '/logout'
 }
+
+export enum NameSpace {
+  OffersData = 'OFFERS_DATA',
+  User = 'USER',
+  App = 'APP'
+}
+
+export const RATING_TITLES: Record<number, string> = {
+  5: 'perfect',
+  4: 'good',
+  3: 'not bad',
+  2: 'badly',
+  1: 'terribly'
+};
