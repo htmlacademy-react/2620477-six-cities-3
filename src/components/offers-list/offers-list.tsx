@@ -3,7 +3,7 @@ import PlaceCard from '../place-card/place-card';
 
 type OffersListProps = {
     offers: Offers;
-    onActiveChange: (activeOfferId: number | undefined) => void;
+    onActiveChange: (activeOfferId: string | undefined) => void;
 }
 
 function OffersList({offers, onActiveChange}: OffersListProps): JSX.Element {
