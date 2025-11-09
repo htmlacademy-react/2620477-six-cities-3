@@ -1,5 +1,14 @@
 import { createSlice, isRejectedWithValue, PayloadAction } from '@reduxjs/toolkit';
-import { fetchOffersAction, fetchOfferAction, fetchOffersNearbyAction, fetchCommentsAction, fetchFavoritesAction, saveCommentAction, logoutAction } from '../api-actions'; // Скоро обновим api-actions
+import {
+  fetchOffersAction,
+  fetchOfferAction,
+  fetchOffersNearbyAction,
+  fetchCommentsAction,
+  fetchFavoritesAction,
+  saveCommentAction,
+  logoutAction,
+  changeFavoriteOfferStatusAction
+} from '../api-actions';
 import { NameSpace } from '../../const';
 import { OffersData } from '../../types/state';
 import { StatusCodes } from 'http-status-codes';
@@ -21,28 +30,6 @@ export const offersData = createSlice({
   reducers: {
     setResourceNotFound: (state, action: PayloadAction<boolean>) => {
       state.isOfferNotFound = action.payload;
-    },
-    changeFavoriteOfferStatus: (state, action: PayloadAction<Offer>) => {
-      const index = state.offers.findIndex((o) => o.id === action.payload.id);
-      state.offers[index] = action.payload;
-
-      if (state.offerDetailed && state.offerDetailed.id === action.payload.id) {
-        state.offerDetailed = {
-          ...state.offerDetailed,
-          isFavorite: action.payload.isFavorite
-        };
-      }
-
-      const offersNearbyIndex = state.offersNearby.findIndex((o) => o.id === action.payload.id);
-      if (offersNearbyIndex !== -1) {
-        state.offersNearby[offersNearbyIndex] = action.payload;
-      }
-
-      if (action.payload.isFavorite) {
-        state.favorites.push(action.payload);
-      } else {
-        state.favorites = state.favorites.filter((favorite) => favorite.id !== action.payload.id);
-      }
     }
   },
   extraReducers(builder) {
@@ -116,8 +103,43 @@ export const offersData = createSlice({
         }));
 
         state.favorites = [];
+      })
+      .addCase(changeFavoriteOfferStatusAction.fulfilled, (state, action) => {
+        const updatedOffer = action.payload;
+
+        if (state.offerDetailed?.id === updatedOffer.id) {
+          state.offerDetailed = {
+            ...state.offerDetailed,
+            isFavorite: updatedOffer.isFavorite
+          };
+        }
+
+        const offerIndex = state.offers.findIndex((o) => o.id === updatedOffer.id);
+        if (offerIndex !== -1) {
+          state.offers[offerIndex] = {
+            ...state.offers[offerIndex],
+            isFavorite: updatedOffer.isFavorite
+          } as Offer;
+        }
+
+        const nearbyIndex = state.offersNearby.findIndex((o) => o.id === updatedOffer.id);
+        if (nearbyIndex !== -1) {
+          state.offersNearby[nearbyIndex] = {
+            ...state.offersNearby[nearbyIndex],
+            isFavorite: updatedOffer.isFavorite
+          } as Offer;
+        }
+
+        if (updatedOffer.isFavorite) {
+          const exists = state.favorites.some((f) => f.id === updatedOffer.id);
+          if (!exists) {
+            state.favorites.push(updatedOffer as unknown as Offer);
+          }
+        } else {
+          state.favorites = state.favorites.filter((f) => f.id !== updatedOffer.id);
+        }
       });
   },
 });
 
-export const { setResourceNotFound, changeFavoriteOfferStatus } = offersData.actions;
+export const { setResourceNotFound } = offersData.actions;
