@@ -1,27 +1,36 @@
 import { Offers } from '../../types/offer';
 import PlaceCard from '../place-card/place-card';
+import { memo, useCallback } from 'react';
 
 type OffersListProps = {
-    offers: Offers;
-    onActiveChange: (activeOfferId: string | undefined) => void;
-}
+  offers: Offers;
+  onActiveChange: (id: string | undefined) => void;
+};
 
-function OffersList({offers, onActiveChange}: OffersListProps): JSX.Element {
+function OffersList({ offers, onActiveChange }: OffersListProps): JSX.Element {
+  const handleMouseEnter = useCallback((id: string) => {
+    onActiveChange(id);
+  }, [onActiveChange]);
+
+  const handleMouseLeave = useCallback(() => {
+    onActiveChange(undefined);
+  }, [onActiveChange]);
+
   return (
-    <div
-      className="cities__places-list places__list tabs__content"
-    >
+    <div className="near-places__list places__list">
       {offers.map((offer) => (
         <PlaceCard
-          offer={offer}
           key={offer.id}
+          offer={offer}
           variant="horizontal"
-          onSetActive={() => onActiveChange(offer.id)}
-          onResetActive={() => onActiveChange(undefined)}
+          onSetActive={handleMouseEnter}
+          onResetActive={handleMouseLeave}
         />
       ))}
     </div>
   );
 }
 
-export default OffersList;
+const MemoizedOffersList = memo(OffersList);
+
+export default MemoizedOffersList;

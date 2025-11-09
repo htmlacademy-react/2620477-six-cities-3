@@ -1,6 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Offer } from '../../types/offer';
 import { getRatingStarsWidth } from '../../utils/getRatingStarsWidth';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { changeFavoriteOfferStatusAction } from '../../store/api-actions';
+import { getAuthorizationStatus } from '../../store/user-process/selectors';
+import { AuthorizationStatus, AppRoute } from '../../const';
+import { memo } from 'react';
 
 type PlaceCardVariant = 'horizontal' | 'vertical';
 
@@ -26,7 +31,7 @@ const CARD_SETTINGS = {
     containerClass: 'favorites__card place-card',
     imageWrapperClass: 'favorites__image-wrapper place-card__image-wrapper',
     infoClass: 'favorites__card-info place-card__info',
-    bookmarkInteractive: false,
+    bookmarkInteractive: true,
   },
 } as const;
 
@@ -38,9 +43,30 @@ function PlaceCard({
 }: PlaceCardProps): JSX.Element {
   const settings = CARD_SETTINGS[variant];
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
+
   const bookmarkClass = `place-card__bookmark-button button${
     offer.isFavorite ? ' place-card__bookmark-button--active' : ''
   }`;
+
+  const handleFavoriteClick = (evt: React.MouseEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    if (isAuth) {
+      dispatch(
+        changeFavoriteOfferStatusAction({
+          offerId: offer.id,
+          isFavorite: offer.isFavorite ? 0 : 1,
+        })
+      );
+    } else {
+      navigate(AppRoute.Login);
+    }
+  };
 
   return (
     <article
@@ -72,13 +98,15 @@ function PlaceCard({
             <b className="place-card__price-value">€{offer.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
+
           <button
             className={bookmarkClass}
             type="button"
+            onClick={handleFavoriteClick}
             disabled={!settings.bookmarkInteractive}
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">
-              <use xlinkHref="#icon-bookmark"></use>
+              <use xlinkHref="#icon-bookmark" />
             </svg>
             <span className="visually-hidden">In bookmarks</span>
           </button>
@@ -100,4 +128,5 @@ function PlaceCard({
   );
 }
 
-export default PlaceCard;
+const MemoizedPlaceCard = memo(PlaceCard);
+export default MemoizedPlaceCard;
