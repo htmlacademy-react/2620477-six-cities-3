@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app/App';
-import { cities } from './mocks/cities';
+import { CITIES } from './const';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import { checkAuthAction, fetchOffersAction } from './store/api-actions';
@@ -18,7 +18,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <ErrorMessage />
-      <App cities={cities} />
+      <App cities={CITIES} />
     </Provider>
   </React.StrictMode>
 );
